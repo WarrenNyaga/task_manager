@@ -1,4 +1,4 @@
-# task_manager/task_utility.py
+# task_manager/task_utils.py
 from .validation import validate_task_title, validate_task_description, validate_due_date
 
 # A list to store the task dictionaries
@@ -6,9 +6,10 @@ tasks_list = []
 
 def add_task(title, description, due_date):
     """Validates inputs and adds a new task dictionary to the list."""
-    if (validate_task_title(title) and 
-        validate_task_description(description) and 
-        validate_due_date(due_date)):
+    try:
+        validate_task_title(title)
+        validate_task_description(description)
+        validate_due_date(due_date)
         
         new_task = {
             "title": title.strip(),
@@ -17,16 +18,18 @@ def add_task(title, description, due_date):
             "completed": False
         }
         tasks_list.append(new_task)
-        print(f"Task '{title}' added successfully!")
+        print("Task added successfully")
         return True
-    return False
+    except ValueError as e:
+        print(str(e))
+        return False
 
 def mark_task_as_complete(title):
     """Finds a task by title and marks it completed."""
     for task in tasks_list:
         if task["title"].lower() == title.strip().lower():
             task["completed"] = True
-            print(f"Task '{task['title']}' marked as complete.")
+            print("Task marked as complete")
             return True
     print(f"Error: Task titled '{title}' not found.")
     return False
